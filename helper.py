@@ -4,12 +4,14 @@ def generate_rademacher(size):
     return np.random.choice([-1, 1], size=(size, ))
 
 def generate_matrix(size):
-    return np.random.rand(size, size)    
+    result = np.random.rand(size, size)    
+    norm = np.linalg.norm(result, 'fro')
+    return result / norm
 
-# take into account frobnius norm 
-def pertube_matrix(A, size):
-    return A + np.random.normal(0, 0.1, size=(size, size))
-
+# potential issue of Frobenius norm not being less than A 
+def pertube_matrix(A):
+    return A + np.random.normal(0, 0.1, size=A.shape)
+    
 # a little bit broken
 # def running_trace_estimate(A, iterations):
 #     start = np.trace(A) 
