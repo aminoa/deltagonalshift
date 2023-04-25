@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from helper import pertube_matrix
-
-def generate_rademacher(size):
-    return np.random.choice([-1, 1], size=(size, ))
+from matrix_generators import *
 
 # hutchinson's trace estimator
 def trace_estimator(A, iterations):
@@ -37,22 +34,29 @@ def diagonal_estimator(A, iterations):
     return result, error
 
 # repeated hutchinson trace estimator
-def repeated_trace_estimator(A, m, iterations):
+def repeated_trace_estimator(A, m, iterations, small_pertube=True):
     result = []
     for _ in range(m):
-        A = pertube_matrix(A)
+        if small_pertube:
+            A = small_pertube_matrix(A)
+        else:
+            A = large_pertube_matrix(A)
         result.append(trace_estimator(A, iterations)[0])
     return result
         
-def deltashift(A, l0, m, l, gamma):
+def deltashift(A, l0, m, l, gamma, small_pertube=True):
     t_prev = trace_estimator(A, l0)[0]
     result = [t_prev]
     true = [np.trace(A)]
     prev_matrix = A
 
+    # bug here, need to use previous iterations of matrix so you shouldn't be doing _ for the iterations 
     for _ in range(1, m):
         # create l random +1/-1 vectors 
-        curr_matrix = pertube_matrix(prev_matrix)
+        if small_pertube:
+            curr_matrix = small_pertube_matrix(prev_matrix)
+        else:
+            curr_matrix = large_pertube_matrix(prev_matrix)
         g = np.array([generate_rademacher(A.shape[0]) for _ in range(l)]) 
         z = np.array([np.matmul(prev_matrix, g[i]) for i in range(l)])
         w = np.array([np.matmul(curr_matrix, g[i]) for i in range(l)])
@@ -72,17 +76,36 @@ def deltashift(A, l0, m, l, gamma):
 
     return result, true
 
+
+# m -> number of matrices generated, iterations -> hutchinson iterations
+def repeated_diagonal_estimator(A, m, iterations, small_pertube=True):
+    result = []
+    true = []  
+    for _ in range(m):
+        if small_pertube:
+            A = small_pertube_matrix(A)
+        else:
+            A = large_pertube_matrix(A)
+
+        true.append(np.diag(A))
+        result.append(diagonal_estimator(A, iterations)[0])
+
+    return result, true
+
 # based on deltashift and diagonal estimator
-def deltagonalshift(A, l0, m, l, gamma):
+def deltagonalshift(A, l0, m, l, gamma, small_pertube=True):
     d_prev = diagonal_estimator(A, l0)[0]
     result = [d_prev]
     true = [np.diag(A)]
     prev_matrix = A
 
-    # issue here 
     for _ in range(1, m):
         # create l random +1/-1 vectors 
-        curr_matrix = pertube_matrix(prev_matrix)
+        if small_pertube:
+            curr_matrix = small_pertube_matrix(prev_matrix)
+        else:
+            curr_matrix = large_pertube_matrix(prev_matrix)
+
         g = np.array([generate_rademacher(A.shape[0]) for _ in range(l)])
 
         right_sum = np.zeros((A.shape[0], ))
@@ -101,3 +124,5 @@ def deltagonalshift(A, l0, m, l, gamma):
         d_prev = d_curr
     
     return result, true
+
+# def deltagonalshift_paramfree(A, l0, m, l):

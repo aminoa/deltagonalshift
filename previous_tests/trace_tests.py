@@ -1,5 +1,5 @@
 import numpy as np
-from helper import hutchinson, running_hutchinson_estimate, running_trace_estimate, deltashift
+from matrix_generators import hutchinson, running_hutchinson_estimate, running_trace_estimate, deltashift
 
 n = 10
 l = 1000
