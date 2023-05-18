@@ -1,4 +1,4 @@
-from matrix_generators import *
+from previous_tests.matrix_generators import *
 
 A = generate_matrix(10)
 B = small_pertube_matrix(A)

@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from estimators import *
-from matrix_generators import generate_matrix
+from previous_tests.estimators import *
+from previous_tests.matrix_generators import generate_matrix
 
 # checking diagonal
 # A = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])

@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matrix_generators import *
+from previous_tests.matrix_generators import *
 
 # hutchinson's trace estimator
 def trace_estimator(A, iterations):

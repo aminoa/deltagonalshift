@@ -8,9 +8,6 @@ def generate_matrix(size):
     norm = np.linalg.norm(result, 'fro')
     return result / norm
 
-# potential issue of Frobenius norm not being less than A 
-# two types of pertubation needed
-
 def small_pertube_matrix(A):
     return A + np.random.normal(0, 0.01, size=A.shape) 
 

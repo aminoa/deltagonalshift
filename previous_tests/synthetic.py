@@ -2,8 +2,8 @@
 # can vary gamma parameter from 0 to 0.5 maybe 
 import numpy as np
 import matplotlib.pyplot as plt
-from matrix_generators import *
-from estimators import *
+from previous_tests.matrix_generators import *
+from previous_tests.estimators import *
 import time
 
 # repeated hutchinson's diagonal estimator vs. deltagonalshift with small matrix pertubation
@@ -55,17 +55,20 @@ def plot_error(error):
     plt.plot(error)
     plt.xlabel('Number of iterations')
     plt.ylabel('Relative error')
-    plt.show()
+    # plt.show()
 
 repeated_result, repeated_true, repeated_total_time, deltagonal_result, deltagonal_true, deltagonal_total_time = repeated_diagonal_deltagonalshift_test(1000, True, 0.1)
 
 print(repeated_total_time)
+print(len(repeated_result))
 repeated_error = calculate_error(repeated_result, repeated_true)
 plot_error(repeated_error)
 
 print(deltagonal_total_time)
+print(len(deltagonal_result))
 deltagonal_error = calculate_error(deltagonal_result, deltagonal_true)
 plot_error(deltagonal_error)
+plt.show()
 
 # repeated_hutchinson_output = repeated_diagonal_estimate_test(100, True)
 # print(repeated_hutchinson_output[2])
